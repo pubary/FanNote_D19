@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+    {{ post.title |truncatechars:25 }}
+{% endblock title %}
+
+{% block content %}
+<div class="col-lg-12 text-center">
+    <h3>{{ post.title }}</h3>
+    <h5>{{ post.category }}</h5>
+</div>
+<div class="col-lg-12 text-left">
+    <br>
+    {{ post.text|censor|linebreaks }}
+</div>
+<div class="col-lg-12 text-center">
+    {{ post.author.username }}
+    <br>
+    {{ post.time|date:'d.m.Y H:i' }}
+    <hr>
+    &nbsp&nbsp
+</div>
+<br>
+{% endblock content %}

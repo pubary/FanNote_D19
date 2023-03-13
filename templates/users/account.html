@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<center>
+    <h2>Страница авторизованного пользователя</h2>
+    <br>
+    <h5>  Логин: {{user.username}} </h5>
+    <br>
+    <h5>  Имя: {{user.first_name}} </h5>
+    <h5>  Фамилия: {{user.last_name}} </h5>
+    <br>
+    <div>  e-mail: {{user.email}} </div><br>
+    <br>
+    <button><a href="{% url 'logout' %}" role="button">Выйти</a></button>
+</center>
+{% endblock content %}

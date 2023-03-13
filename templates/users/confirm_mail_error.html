@@ -1,0 +1,17 @@
+{% extends 'default.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<center>
+    <h2> Ошибка </h2>
+    <br>
+    <h5>  Не удалось отправить код подтверждения </h5>
+    <br>
+    <h5>   </h5>
+    <br>
+    <button><a href=" {% url 'register' %} "> Повторить </a></button>
+</center>
+{% endblock content %}
