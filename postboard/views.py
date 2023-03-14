@@ -1,7 +1,8 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from postboard.forms import PostForm
 from postboard.models import Post, Feedback
@@ -13,6 +14,7 @@ class PostsList(ListView):
     ordering = '-time'
     context_object_name = 'posts'
     paginate_by = 8
+    extra_context = {'title': 'Наши объявления'}
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,3 +70,10 @@ class PostEdit(LoginRequiredMixin, UpdateView):
              <button><a href="/">Назад</a></button></center>'""")
         else:
             return super().get(self, request, *args, **kwargs)
+
+
+class FeedbackDelete(LoginRequiredMixin, DeleteView):
+    model = Feedback
+    template_name = 'postboard/feedback_delete.html'
+    success_url = reverse_lazy('account')
+    extra_context = {'title': 'Удаление отклика'}

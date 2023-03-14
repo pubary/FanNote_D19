@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<center>
+    <h1> {{ title }} </h1>
+    <hr>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h4>На ваше объявление был написан отклик:</h4>
+        <em>{{ feedback.text }} &nbsp </em>
+        <br>
+        ({{ feedback.time|date:'d.m.Y H:i' }})
+        <h2>Вы действительно хотите его удалить?</h2>
+        <button><a href="{% url 'account' %}" > Отмена </a></button>
+        &nbsp &nbsp
+        <input type="submit" value="Удалить" />
+    </form>
+</center>
+<br>
+{% endblock content %}

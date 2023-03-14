@@ -16,4 +16,12 @@ class PostFilter(FilterSet):
         widget=DateInput(attrs={'type': 'date'}),
     )
 
+    # @property
+    # def qs(self):
+    #     parent = super().qs
+    #     author = getattr(self.request, 'user', None)
+    #     print(author)
+    #     print(self.request)
+    #     return parent.filter(author=author)
+
 

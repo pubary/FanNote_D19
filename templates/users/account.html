@@ -1,9 +1,5 @@
 {% extends 'default.html' %}
 
-{% block title %}
-    {{ title }}
-{% endblock title %}
-
 {% block content %}
     <center>
         <h2>Страница авторизованного пользователя</h2>
@@ -22,36 +18,52 @@
             <br>
         {% endfor %}
         <input type="submit" name="do_search" value="Выбрать" />
+        </form>
     </center>
     <br>
     <hr>
     {% if filter_feedback %}
         <table>
-                        <tr>
-                            <td>Ссылка на объявление &nbsp &nbsp</td>
-                            <td>Дата отклика</td>
-                            <td>Ваше действие &nbsp &nbsp</td>
-                            <td>Автор отклика &nbsp &nbsp</td>
-                            <td><ul>Текст отклика</ul></td>
-                        </tr>
+            <ul>
+                <tr>
+                    <th> &nbsp &nbsp &nbsp &nbsp </th>
+                    <th> &nbsp Ссылка на  ваше &nbsp<br> объявление (дата) &nbsp </th>
+                    <th> &nbsp &nbsp Дата отклика &nbsp &nbsp &nbsp</th>
+                    <th> Ваше действие &nbsp &nbsp</th>
+                    <th> Автор отклика / Текст отклика &nbsp &nbsp</th>
+                </tr>
+            </ul>
+        </table>
+    {% endif %}
+
+    {% if filter_feedback %}
         {% for feedbacks in filter_feedback %}
             {% if feedbacks %}
                 {% for feedback in feedbacks%}
-                    <tr>
-                        <td><center><a href="{% url 'post' pk=feedback.post.pk %}">{{feedback.post.pk}}</a></center></td>
-                        <td> {{ feedback.time|date:'d.m.Y H:i' }} &nbsp&nbsp</td>
+                    <ul>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        • &nbsp
+                        <a href="{% url 'post' pk=feedback.post.pk %}">{{feedback.time|date:'d.m.Y H:i'}}</a>
+                        &nbsp &nbsp
+                        {{ feedback.time |date:'d.m.Y H:i' }}
+                        &nbsp &nbsp &nbsp &nbsp &nbsp
                         {% if feedback.is_active %}
-                            <td><a href="">Удалить</a></td>
+                            <input type="submit" name="{{feedback.pk}}" value="Удалить" />
                         {% else %}
-                            <td><a href="">Принять</a></td>
+                            <input type="submit" name="{{feedback.pk}}" value="Принять" />
                         {% endif %}
-                        <td>&nbsp&nbsp {{ feedback.author }}</td>
-                        <td>&nbsp&nbsp<em> {{ feedback.text }} </em> </td>
-                    </tr>
+                        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                        {{ feedback.author }}
+                        &nbsp &nbsp &nbsp &nbsp
+                        <i> {{ feedback.text }} </i>
+                        &nbsp &nbsp &nbsp &nbsp
+                    </form>
+                    </ul>
                 {% endfor %}
             {% endif %}
         {% endfor %}
-        </table>
     {% endif %}
+
 {% endblock content %}
 

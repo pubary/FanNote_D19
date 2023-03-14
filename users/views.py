@@ -7,7 +7,7 @@ from django.views.generic import CreateView, ListView
 
 from postboard.filters import PostFilter
 from postboard.models import Feedback, Post
-from .utilits import confirm_code, confirm_mail
+from .utilits import confirm_code, confirm_mail, accept_mail
 from .forms import FunUserCreationForm
 from .models import FunUser
 
@@ -19,7 +19,7 @@ class AccountView(LoginRequiredMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().filter(author=self.request.user)
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
@@ -29,40 +29,47 @@ class AccountView(LoginRequiredMixin, ListView):
         feedbacks = []
         for p in self.filterset.qs:
             feedback = Feedback.objects.filter(post=p)
-            print(feedback)
             feedbacks.append(feedback)
-        print(feedbacks)
         context['filter_feedback'] = feedbacks
         context['title'] = 'Мой аккаунт'
         return context
 
+
     def post(self, request, *args, **kwargs):
-        key = list(dict(request.POST.lists()).keys())[0]
+        d = request.POST.dict()
+        key = 0
+        for k, i in d.items():
+            if i == 'Принять' or i == 'Удалить':
+                key = k
+        print(key)
         feedback = get_object_or_404(Feedback, id=key)
-        if request.POST['key'] == 'save':
+        key = str(key)
+        if request.POST[key] == 'Принять':
             try:
                 feedback.is_active = True
                 feedback.save()
+                print(f'отклик id{key} принят')
             except:
                 return HttpResponse(""" <center><h1>Ошибка записи</h1>
                 <button><a href="">Повторить</a>
                 </button></center> """, charset="utf-8")
-            return redirect(request.META.get('HTTP_REFERER'))
-        elif request.POST['key'] == 'delete':
+            accept_mail(user=request.user, feedback=feedback)
+            redirect(request.META.get('HTTP_REFERER'))
+        elif request.POST[key] == 'Удалить':
             try:
-                feedback.delete()
+                return redirect('feedback_delete', key)
             except:
                 return HttpResponse(""" <center><h1>Ошибка удаления</h1>
                 <button><a href="">Повторить</a>
                 </button></center> """, charset="utf-8")
-            return redirect(request.META.get('HTTP_REFERER'))
-        return redirect(request.META.get('HTTP_REFERER'))
+        return redirect('account')
 
 
 class RegisterView(CreateView):
     model = FunUser
     form_class = FunUserCreationForm
     success_url = reverse_lazy('confirm')
+    extra_context = {'title': 'Зарегистрироваться'}
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -107,5 +114,11 @@ def confirm_mail_error(request):
 # test the view of the confirm email
 def confirm_mail_view(request):
     return render(request, 'users/confirm_mail.html', {'name': 'user', 'code': '123456789',})
+
+# test the view of the accept email
+def accept_mail_view(request):
+    feedback = get_object_or_404(Feedback, pk=3)
+    name = request.user.username
+    return render(request, 'users/accept_mail.html', {'name': name, 'feedback': feedback,})
 
 

@@ -27,7 +27,7 @@
         <div>
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <em> Ваш отклик: &nbsp </em>
+                <em>&nbsp Ваш отклик: &nbsp </em>
                 <label for="feedback"> &nbsp &nbsp </label>
                 <input type="text" name="feedback" placeholder="Текст"> &nbsp
                 <input type="submit" value="Отправить">
@@ -46,14 +46,15 @@
 {% endif %}
 
 {% if feedbacks %}
-    {% for feedback in feedbacks %}
-        <div>
-            • &nbsp {{ feedback.time |date:'d.m.Y H:i' }}
-            &nbsp &nbsp &nbsp &nbsp
-            <em> {{ feedback.text }} </em>
-
-        </div>
-    {% endfor %}
+        <table>
+            {% for feedback in feedbacks %}
+            <tr>
+                <td>&nbsp • &nbsp {{ feedback.time |date:'d.m.Y H:i' }} &nbsp &nbsp</td>
+                <td><em> {{ feedback.text }} </em> &nbsp &nbsp</td>
+                <td> {{ feedback.author }} </td>
+            </tr>
+            {% endfor %}
+        </table>
 {% endif %}
 
 {% endblock content %}
