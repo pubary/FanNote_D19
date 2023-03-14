@@ -1,33 +1,19 @@
-from django.forms import DateInput, RadioSelect
-from django_filters import FilterSet, ModelMultipleChoiceFilter, DateTimeFilter, ModelChoiceFilter, ChoiceFilter
-
-from postboard.models import Post
+from django.forms import DateInput, TextInput
+from django_filters import FilterSet, DateTimeFilter, Filter
 
 
-# class FeedbackFilter(FilterSet):
-#     post = ModelMultipleChoiceFilter(
-#         field_name='post__title',
-#         queryset=Post.objects.filter(author='user'),
-#         label='Категория (или одна или несколько)',
-#         conjoined=True,
-#     )
-#     time = DateTimeFilter(
-#         field_name='time',
-#         lookup_expr='gte',
-#         widget=DateInput(attrs={'type': 'date'}),
-#     )
-#     # author = ModelChoiceFilter(
-#     #     field_name='author__author_acc',
-#     #     queryset=Author.objects.all(),
-#     #     label='Автор',
-#     # )
-#
-#     class Meta:
-#         model = Post
-#         fields = {
-#             'title': ['icontains'],
-#             'text': ['icontains'],
-# #            'p_type': ['exact'],
-#             }
+class PostFilter(FilterSet):
+    title = Filter(
+        field_name='title',
+        lookup_expr='icontains',
+        label='заголовок, которых содержит',
+        widget=TextInput(attrs={'cols': 120})
+    )
+    time = DateTimeFilter(
+        field_name='time',
+        lookup_expr='gte',
+        label='и дата написания этих объявлений (не раньше)',
+        widget=DateInput(attrs={'type': 'date'}),
+    )
 
 

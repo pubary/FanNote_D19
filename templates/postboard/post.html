@@ -9,17 +9,19 @@
     <h3>{{ post.title }}</h3>
     <h5>{{ post.category }}</h5>
 </center>
-<div class="col-lg-12 text-left">
-    {{ post.text|linebreaks }}
-</div>
+<ul>{{ post.text|linebreaks }}</ul>
 <center>
-    {{ post.author.username }}
-    &nbsp&nbsp
-    {{ post.time|date:'d.m.Y H:i' }}
+    {{ post.author.username }} &nbsp &nbsp
+    {{ post.time|date:'d.m.Y H:i' }} &nbsp &nbsp
+    {% if post.author == request.user %}
+        <button>
+            <a href="{% url 'post_edit' pk=post.pk %}" role="button"> Редактировать </a>
+        </button>
+    {% endif %}
     <hr>
-    <button><a href="{% url 'post_edit' pk=post.pk %}" role="button"> Редактировать </a></button>
 </center>
 <br>
+
 {% if request.user.is_authenticated %}
     {% if request.user != post.author %}
         <div>

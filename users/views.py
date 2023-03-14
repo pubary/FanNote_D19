@@ -5,26 +5,34 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView
 
-from postboard.models import Feedback
+from postboard.filters import PostFilter
+from postboard.models import Feedback, Post
 from .utilits import confirm_code, confirm_mail
 from .forms import FunUserCreationForm
 from .models import FunUser
 
 
 class AccountView(LoginRequiredMixin, ListView):
-    model = Feedback
+    model = Post
     ordering = '-time'
-    context_object_name = 'feedbacks'
+    context_object_name = 'posts'
     paginate_by = 5
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     self.filterset = FeedbackFilter(self.request.GET, queryset)
-    #     return self.filterset.qs
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['filterset'] = self.filterset
+        context['filterset'] = self.filterset
+        feedbacks = []
+        for p in self.filterset.qs:
+            feedback = Feedback.objects.filter(post=p)
+            print(feedback)
+            feedbacks.append(feedback)
+        print(feedbacks)
+        context['filter_feedback'] = feedbacks
         context['title'] = 'Мой аккаунт'
         return context
 

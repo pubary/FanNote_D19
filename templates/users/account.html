@@ -5,25 +5,53 @@
 {% endblock title %}
 
 {% block content %}
-<center>
-    <h2>Страница авторизованного пользователя</h2>
-    <h3><em> {{user.username}} </em></h3>
-    <div>  e-mail: <em>{{user.email}} </div>
+    <center>
+        <h2>Страница авторизованного пользователя</h2>
+        <h3><em> {{user.username}} </em></h3>
+        <div>  e-mail: <em>{{user.email}}</em></div>
+        <br>
+        <button><a href="{% url 'logout' %}" role="button">Выйти</a></button>
+        <br>
+
+        <h3> Отклики на Ваши объявления </h3>
+
+        <form action="" method="get">
+        {% for f in filterset.form %}
+            <div><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>&nbsp{{ f }}</div>
+            <div class="form-error">{{ f.errors }}</div>
+            <br>
+        {% endfor %}
+        <input type="submit" name="do_search" value="Выбрать" />
+    </center>
     <br>
-    <button><a href="{% url 'logout' %}" role="button">Выйти</a></button>
-    <br>
-{% if feedbacks %}
-    <h4> Отклики на Ваши объявления </h4>
-</center>
-    {% for feedback in feedbacks %}
-        <div>
-            <tr>
-                <td> {{ feedback.time|date:'d.m.Y H:i'  }} </td>
-                <td> {{ feedback.text }} </td>
-                <td> {{ feedback.is_active }} <hr> </td>
-            </tr>
-        </div>
-    {% endfor %}
-{% endif %}
+    <hr>
+    {% if filter_feedback %}
+        <table>
+                        <tr>
+                            <td>Ссылка на объявление &nbsp &nbsp</td>
+                            <td>Дата отклика</td>
+                            <td>Ваше действие &nbsp &nbsp</td>
+                            <td>Автор отклика &nbsp &nbsp</td>
+                            <td><ul>Текст отклика</ul></td>
+                        </tr>
+        {% for feedbacks in filter_feedback %}
+            {% if feedbacks %}
+                {% for feedback in feedbacks%}
+                    <tr>
+                        <td><center><a href="{% url 'post' pk=feedback.post.pk %}">{{feedback.post.pk}}</a></center></td>
+                        <td> {{ feedback.time|date:'d.m.Y H:i' }} &nbsp&nbsp</td>
+                        {% if feedback.is_active %}
+                            <td><a href="">Удалить</a></td>
+                        {% else %}
+                            <td><a href="">Принять</a></td>
+                        {% endif %}
+                        <td>&nbsp&nbsp {{ feedback.author }}</td>
+                        <td>&nbsp&nbsp<em> {{ feedback.text }} </em> </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        </table>
+    {% endif %}
 {% endblock content %}
 

@@ -12,7 +12,7 @@ class PostsList(ListView):
     model = Post
     ordering = '-time'
     context_object_name = 'posts'
-    paginate_by = 5
+    paginate_by = 8
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -27,7 +27,7 @@ class PostDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['feedbacks'] = Feedback.objects.filter(post_id=self.kwargs['pk'], is_active=True)
+        context['feedbacks'] = Feedback.objects.filter(post_id=self.kwargs['pk'])#, is_active=True)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -63,7 +63,7 @@ class PostEdit(LoginRequiredMixin, UpdateView):
     def get(self, request, *args, **kwargs):
         author = get_object_or_404(Post, pk=self.kwargs['pk']).author
         if author != self.request.user:
-            return HttpResponseForbidden("""{% extends 'default.html' %}<center><h2>Доступ заблокирован!</h2>
+            return HttpResponseForbidden("""<center><h2>Доступ заблокирован!</h2>
              <h4>Вы не являетесь автором этого объявления!</h4>
              <button><a href="/">Назад</a></button></center>'""")
         else:
