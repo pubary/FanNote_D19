@@ -13,7 +13,7 @@
        <table>
            {% for post in posts %}
              <tr>
-               <td><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title|truncatechars:55 }}</a></td>
+               <td><a href="{% url 'post' pk=post.pk %}">{{ post.title|truncatechars:120 }}</a></td>
                <td>{{ post.time|date:'d.m.Y H:i'  }}</td>
                <td>{{ post.text |truncatechars:255 }} <hr> </td>
              </tr>

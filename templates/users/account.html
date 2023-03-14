@@ -7,14 +7,23 @@
 {% block content %}
 <center>
     <h2>Страница авторизованного пользователя</h2>
-    <br>
-    <h5>  Логин: {{user.username}} </h5>
-    <br>
-    <h5>  Имя: {{user.first_name}} </h5>
-    <h5>  Фамилия: {{user.last_name}} </h5>
-    <br>
-    <div>  e-mail: {{user.email}} </div><br>
+    <h3><em> {{user.username}} </em></h3>
+    <div>  e-mail: <em>{{user.email}} </div>
     <br>
     <button><a href="{% url 'logout' %}" role="button">Выйти</a></button>
+    <br>
+{% if feedbacks %}
+    <h4> Отклики на Ваши объявления </h4>
 </center>
+    {% for feedback in feedbacks %}
+        <div>
+            <tr>
+                <td> {{ feedback.time|date:'d.m.Y H:i'  }} </td>
+                <td> {{ feedback.text }} </td>
+                <td> {{ feedback.is_active }} <hr> </td>
+            </tr>
+        </div>
+    {% endfor %}
+{% endif %}
 {% endblock content %}
+

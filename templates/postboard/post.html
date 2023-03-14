@@ -1,25 +1,57 @@
-{% extends 'flatpages/default.html' %}
-{% load custom_filters %}
+{% extends 'default.html' %}
 
 {% block title %}
     {{ post.title |truncatechars:25 }}
 {% endblock title %}
 
 {% block content %}
-<div class="col-lg-12 text-center">
+<center>
     <h3>{{ post.title }}</h3>
     <h5>{{ post.category }}</h5>
-</div>
+</center>
 <div class="col-lg-12 text-left">
-    <br>
-    {{ post.text|censor|linebreaks }}
+    {{ post.text|linebreaks }}
 </div>
-<div class="col-lg-12 text-center">
+<center>
     {{ post.author.username }}
-    <br>
+    &nbsp&nbsp
     {{ post.time|date:'d.m.Y H:i' }}
     <hr>
-    &nbsp&nbsp
-</div>
+    <button><a href="{% url 'post_edit' pk=post.pk %}" role="button"> Редактировать </a></button>
+</center>
 <br>
+{% if request.user.is_authenticated %}
+    {% if request.user != post.author %}
+        <div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <em> Ваш отклик: &nbsp </em>
+                <label for="feedback"> &nbsp &nbsp </label>
+                <input type="text" name="feedback" placeholder="Текст"> &nbsp
+                <input type="submit" value="Отправить">
+            </form>
+            <br>
+        </div>
+    {% endif %}
+{% else %}
+    <div>
+        Для того, чтобы оставить свой комментарий &nbsp
+        <button>
+        <a class="btn btn-outline-dark" href="{% url 'login' %}" role="button">войдите в аккаунт</a>
+        </button>
+        <br><br>
+    </div>
+{% endif %}
+
+{% if feedbacks %}
+    {% for feedback in feedbacks %}
+        <div>
+            • &nbsp {{ feedback.time |date:'d.m.Y H:i' }}
+            &nbsp &nbsp &nbsp &nbsp
+            <em> {{ feedback.text }} </em>
+
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% endblock content %}

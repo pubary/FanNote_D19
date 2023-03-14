@@ -8,6 +8,14 @@
     {% endblock script %}
 </head>
 <body>
+<center>
+    <button><a href="{% url 'logout' %}" role="button"> Выйти </a></button>
+    <button><a href="{% url 'register' %}" role="button"> Регистрация </a></button>
+    <button><a href="{% url 'login' %}" role="button"> Войти </a></button>
+    <button><a href="{% url 'account' %}" role="button"> Аккаунт </a></button>
+    <button><a href="{% url 'posts' %}" role="button"> Объявления </a></button>
+    <button><a href="{% url 'post_create' %}" role="button"> Написать </a></button>
+</center>
     {% block body %}
         {% block content %}
         {% endblock content %}

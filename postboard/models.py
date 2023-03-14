@@ -34,7 +34,7 @@ class Post(models.Model):
         return f'{self.title.title()[:30]}\n{self.category}\n{self.text[:60]}'
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[str(self.pk)])
+        return reverse('post', args=[str(self.pk)])
 
     class Meta:
         verbose_name = 'Объявление'
