@@ -31,7 +31,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     photo = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, verbose_name='Фото')
     # time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
-    # video = models.ImageField(upload_to='video/%Y/%m/%d/', blank=True, verbose_name='Видео')
+    file = models.FileField(upload_to='file/%Y/%m/%d/', blank=True, verbose_name='Файл')
 
     def __str__(self):
         return f'{self.title.title()[:30]}\n{self.category}\n{self.text[:60]}'

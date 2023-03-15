@@ -16,6 +16,15 @@
     {% endif %}
 
     <ul>{{ post.text|linebreaks }}</ul>
+
+    {% if post.file %}
+        <center>
+            К объявлению приложен
+            <a href="http://127.0.0.1:8000{{ post.file.url }}">дополнительный файл.</a>
+            <br><br>
+        </center>
+    {% endif %}
+
     <center>
         {{ post.author.username }} &nbsp &nbsp
         {{ post.time|date:'d.m.Y H:i' }} &nbsp &nbsp

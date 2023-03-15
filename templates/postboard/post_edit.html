@@ -18,12 +18,17 @@
             <h4>{{ form.text.label }}</h4>
             {{ form.text }}
             <br>
-            <h4>{{ form.photo.label }}</h4>
+            <h4>Фото для вашего объявления</h4>
             {{ form.photo.help_text }}
             {{ form.photo }}
+            <br>
+            <h4>Аудио-, видео- или другой файл</h4>
+            {{ form.file.help_text }}
+            {{ form.file }}
             <br><br>
             <input type="submit" value="Сохранить" />
         </form>
         <br>
     </center>
 {% endblock content %}
+
