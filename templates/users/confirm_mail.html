@@ -8,19 +8,18 @@
 
     <body>
         <center>
-        <h3><font color=#0C11B0>
-                <i>{{ name |capfirst }}</i>
-                , код для сайта:
-            </font>
-        </h3>
-
-
-            <font color=#082C52>
-                {{ code }}
-            </font>
- <a href="http://127.0.0.1:8000{% url 'confirm' %}">
-                </center>
-    </body>
-</html>
-
-
+            <h2>
+                <font color=#0C11B0>
+                    Уважаемый <em>&nbsp {{ name |capfirst }} </em>!
+                </font>
+            </h2>
+            <h4> для подтверждения регистрации на нашем сайте <br>
+                перейдите <a href="http://127.0.0.1:8000{% url 'confirm' %}"> по ссылке </a>
+                и введите свой логин и этот код активации:
+            </h4>
+            <h3>
+                <font color=#082C52>
+                    {{ code }}
+                </font>
+            </h3>
+        </center>

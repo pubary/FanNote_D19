@@ -1,5 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -21,15 +22,14 @@ class AccountView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset().filter(author=self.request.user)
         self.filterset = PostFilter(self.request.GET, queryset)
-        return self.filterset.qs
+        return self.filterset.qs.order_by('-time')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         feedbacks = []
         for p in self.filterset.qs:
-            feedback = Feedback.objects.filter(post=p)
-            feedbacks.append(feedback)
+            feedbacks.append(p.feedback_set.all())
         context['filter_feedback'] = feedbacks
         context['title'] = 'Мой аккаунт'
         return context
@@ -41,19 +41,20 @@ class AccountView(LoginRequiredMixin, ListView):
         for k, i in d.items():
             if i == 'Принять' or i == 'Удалить':
                 key = k
-        print(key)
         feedback = get_object_or_404(Feedback, id=key)
         key = str(key)
         if request.POST[key] == 'Принять':
             try:
                 feedback.is_active = True
                 feedback.save()
-                print(f'отклик id{key} принят')
             except:
                 return HttpResponse(""" <center><h1>Ошибка записи</h1>
                 <button><a href="">Повторить</a>
                 </button></center> """, charset="utf-8")
-            accept_mail(user=request.user, feedback=feedback)
+            try:
+                accept_mail(user=request.user, feedback=feedback)
+            except:
+                print(f'Ошибка отправки email пользователю {feedback.author} о принятии его отклика')
             redirect(request.META.get('HTTP_REFERER'))
         elif request.POST[key] == 'Удалить':
             try:
@@ -112,13 +113,42 @@ def confirm_mail_error(request):
 
 
 # test the view of the confirm email
+@login_required
 def confirm_mail_view(request):
-    return render(request, 'users/confirm_mail.html', {'name': 'user', 'code': '123456789',})
+    if request.user.is_staff:
+        return render(request, 'users/confirm_mail.html', {'name': 'user', 'code': '123456789',})
+    else:
+        return HttpResponseForbidden('<h1>Доступ запрещён</h1>')
+
 
 # test the view of the accept email
+@login_required
 def accept_mail_view(request):
-    feedback = get_object_or_404(Feedback, pk=3)
-    name = request.user.username
-    return render(request, 'users/accept_mail.html', {'name': name, 'feedback': feedback,})
+    if request.user.is_staff:
+        feedback = get_object_or_404(Feedback, pk=3)
+        name = request.user.username
+        return render(request, 'users/accept_mail.html', {'name': name, 'feedback': feedback,})
+    else:
+        return HttpResponseForbidden('<h1>Доступ запрещён</h1>')
 
 
+# test the view of the news email
+@login_required
+def news_mail_view(request):
+    if request.user.is_staff:
+        posts = Post.objects.filter(author_id=3)
+        msg_data = {'name': request.user.username, 'posts': posts}
+        return render(request, 'users/news_mail.html', {'msg_data': msg_data, })
+    else:
+        return HttpResponseForbidden('<h1>Доступ запрещён</h1>')
+
+
+# test the view of the notify email
+@login_required
+def notify_mail_view(request):
+    if request.user.is_staff:
+        feedback = get_object_or_404(Feedback, pk=3)
+        name = request.user.username
+        return render(request, 'users/notify_mail.html', {'name': name, 'feedback': feedback,})
+    else:
+        return HttpResponseForbidden('<h1>Доступ запрещён</h1>')

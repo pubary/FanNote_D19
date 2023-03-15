@@ -2,7 +2,6 @@ import secrets
 import string
 
 from django.core.mail import EmailMultiAlternatives
-from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 
 from fannote.settings import MY_MAIL
@@ -30,7 +29,7 @@ def confirm_mail(user):
         to=[email, ],
     )
     msg.attach_alternative(html_content, "text/html")
-    print(f" Отправка кода для подтверждения регистрации пользователя {user.username}")
+    # print(f" Отправка кода для подтверждения регистрации пользователя {user.username}")
     msg.send()
 
 
@@ -50,5 +49,6 @@ def accept_mail(user, feedback):
         to=[email, ],
     )
     msg.attach_alternative(html_content, "text/html")
-    print(f" Отправка сообщения о принятии отклика пользователя {user.username}")
+    # print(f" Отправка сообщения о принятии отклика пользователя {user.username}")
     msg.send()
+

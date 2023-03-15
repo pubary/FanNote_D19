@@ -10,15 +10,15 @@
         <center>
             <h3>
                 <font color=#0C11B0>
-                    Уважаемый <em>&nbsp {{ name |capfirst }} &nbsp</em>, ваш отклик
+                    Уважаемый <em>&nbsp {{ name |capfirst }} </em>, ваш отклик
                 </font>
             </h3>
-            <h4><em>{{ feedback.text }} &nbsp</em>(от {{feedback.time|date:'d.m.Y H:i'}})</h4>
+            <h4><em>{{ feedback.text |capfirst }} &nbsp</em>(от {{feedback.time|date:'d.m.Y H:i'}})</h4>
             <h4> к объявлению </h4>
             <div>
                 <font color=#082C52>
-                    <em>{{ feedback.post.title }}</em><br>
-                (автор {{ feedback.post.author }} )
+                    <em>{{ feedback.post.title |capfirst }}</em><br>
+                (автор {{ feedback.post.author |capfirst }} )
                 </font>
                 <h3>принят!</h3>
             </div>

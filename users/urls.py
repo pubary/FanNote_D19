@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-from .views import AccountView, RegisterView, ConfirmView, confirm_mail_view, confirm_mail_error, accept_mail_view
+from .views import AccountView, RegisterView, ConfirmView, confirm_mail_view, confirm_mail_error, accept_mail_view, \
+    notify_mail_view, news_mail_view
 
 urlpatterns = [
     path('account/', AccountView.as_view(template_name='users/account.html'), name='account'),
@@ -11,4 +12,6 @@ urlpatterns = [
     path('confirm-mail-view/', confirm_mail_view, name='confirm_mail'),
     path('confirm-mail-error/', confirm_mail_error, name='confirm_mail_error'),
     path('accept-mail-view/', accept_mail_view, name='accept_mail'),
+    path('news-mail-view/', news_mail_view, name='news_mail'),
+    path('notify-mail-view/', notify_mail_view, name='notify_mail'),
 ]
