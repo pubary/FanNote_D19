@@ -15,7 +15,9 @@
     <button><a href="{% url 'account' %}" role="button"> Аккаунт </a></button>
     <button><a href="{% url 'posts' %}" role="button"> Объявления </a></button>
     <button><a href="{% url 'post_create' %}" role="button"> Написать </a></button>
+    <br><br>
     {% if request.user.is_staff %}
+        <button><a href="/admin"> Админка </a></button>
         <button><a href="{% url 'confirm_mail' %}" role="button"> Подтверждение </a></button>
         <button><a href="{% url 'confirm_mail_error' %}" role="button"> Ошибка </a></button>
         <button><a href="{% url 'accept_mail' %}" role="button"> Принятие </a></button>

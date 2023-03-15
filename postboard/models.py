@@ -29,6 +29,9 @@ class Post(models.Model):
     time = models.DateTimeField(auto_now_add=True, verbose_name='Время написания')
     author = models.ForeignKey(FunUser, on_delete=models.CASCADE, verbose_name='Автор',)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
+    photo = models.ImageField(upload_to='photo/%Y/%m/%d/', blank=True, verbose_name='Фото')
+    # time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
+    # video = models.ImageField(upload_to='video/%Y/%m/%d/', blank=True, verbose_name='Видео')
 
     def __str__(self):
         return f'{self.title.title()[:30]}\n{self.category}\n{self.text[:60]}'

@@ -5,56 +5,62 @@
 {% endblock title %}
 
 {% block content %}
-<center>
-    <h3>{{ post.title }}</h3>
-    <h5>{{ post.category }}</h5>
-</center>
-<ul>{{ post.text|linebreaks }}</ul>
-<center>
-    {{ post.author.username }} &nbsp &nbsp
-    {{ post.time|date:'d.m.Y H:i' }} &nbsp &nbsp
-    {% if post.author == request.user %}
-        <button>
-            <a href="{% url 'post_edit' pk=post.pk %}" role="button"> Редактировать </a>
-        </button>
-    {% endif %}
-    <hr>
-</center>
-<br>
 
-{% if request.user.is_authenticated %}
-    {% if request.user != post.author %}
+    <center>
+        <h3>{{ post.title }}</h3>
+        <h5>{{ post.category }}</h5>
+    </center>
+
+    {% if post.photo %}
+        <center><img class="img-article-left thumb" src="{{post.photo.url}}"></center>
+    {% endif %}
+
+    <ul>{{ post.text|linebreaks }}</ul>
+    <center>
+        {{ post.author.username }} &nbsp &nbsp
+        {{ post.time|date:'d.m.Y H:i' }} &nbsp &nbsp
+        {% if post.author == request.user %}
+            <button>
+                <a href="{% url 'post_edit' pk=post.pk %}" role="button"> Редактировать </a>
+            </button>
+        {% endif %}
+        <hr>
+    </center>
+    <br>
+
+    {% if request.user.is_authenticated %}
+        {% if request.user != post.author %}
+            <div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <em>&nbsp Ваш отклик: &nbsp </em>
+                    <label for="feedback"> &nbsp &nbsp </label>
+                    <input type="text" name="feedback" placeholder="Текст"> &nbsp
+                    <input type="submit" value="Отправить">
+                </form>
+                <br>
+            </div>
+        {% endif %}
+    {% else %}
         <div>
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <em>&nbsp Ваш отклик: &nbsp </em>
-                <label for="feedback"> &nbsp &nbsp </label>
-                <input type="text" name="feedback" placeholder="Текст"> &nbsp
-                <input type="submit" value="Отправить">
-            </form>
-            <br>
+            Для того, чтобы оставить свой комментарий &nbsp
+            <button>
+            <a class="btn btn-outline-dark" href="{% url 'login' %}" role="button">войдите в аккаунт</a>
+            </button>
+            <br><br>
         </div>
     {% endif %}
-{% else %}
-    <div>
-        Для того, чтобы оставить свой комментарий &nbsp
-        <button>
-        <a class="btn btn-outline-dark" href="{% url 'login' %}" role="button">войдите в аккаунт</a>
-        </button>
-        <br><br>
-    </div>
-{% endif %}
 
-{% if feedbacks %}
-        <table>
-            {% for feedback in feedbacks %}
-            <tr>
-                <td>&nbsp • &nbsp {{ feedback.time |date:'d.m.Y H:i' }} &nbsp &nbsp</td>
-                <td><em> {{ feedback.text }} </em> &nbsp &nbsp</td>
-                <td> {{ feedback.author }} </td>
-            </tr>
-            {% endfor %}
-        </table>
-{% endif %}
+    {% if feedbacks %}
+            <table>
+                {% for feedback in feedbacks %}
+                <tr>
+                    <td>&nbsp • &nbsp {{ feedback.time |date:'d.m.Y H:i' }} &nbsp &nbsp</td>
+                    <td><em> {{ feedback.text }} </em> &nbsp &nbsp</td>
+                    <td> {{ feedback.author }} </td>
+                </tr>
+                {% endfor %}
+            </table>
+    {% endif %}
 
 {% endblock content %}
