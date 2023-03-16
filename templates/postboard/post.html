@@ -12,7 +12,7 @@
     </center>
 
     {% if post.photo %}
-        <center><img class="img-article-left thumb" src="{{post.photo.url}}"></center>
+        <center><img src="{{post.photo.url}}"></center>
     {% endif %}
 
     <ul>{{ post.text|linebreaks }}</ul>

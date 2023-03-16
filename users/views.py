@@ -28,12 +28,18 @@ class AccountView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         feedbacks = []
+        # # content = Feedback.objects.none() # alternative version
         for p in self.filterset.qs:
-            feedbacks.append(p.feedback_set.all())
+            f = p.feedback_set.all()
+            if f.first():
+                feedbacks.append(f)
+        #     # feedback = Feedback.objects.filter(post=p)
+        #     # content = content.union(feedback)
+        # # context['filter_feedback'] = content
         context['filter_feedback'] = feedbacks
+        print(feedbacks)
         context['title'] = 'Мой аккаунт'
         return context
-
 
     def post(self, request, *args, **kwargs):
         d = request.POST.dict()
@@ -152,3 +158,4 @@ def notify_mail_view(request):
         return render(request, 'users/notify_mail.html', {'name': name, 'feedback': feedback,})
     else:
         return HttpResponseForbidden('<h1>Доступ запрещён</h1>')
+
